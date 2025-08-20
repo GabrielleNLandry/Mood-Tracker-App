@@ -1,42 +1,19 @@
-/* global importScripts, workbox */
-const CACHE = "moonmood-offline-v1";
+// src/sw.js
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { StaleWhileRevalidate } from 'workbox-strategies';
 
-// Workbox CDN
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js");
+self.skipWaiting();
+self.clientsClaim();
 
-// Activate new SW immediately when updated
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
-});
-workbox.core.clientsClaim();
+// ⬇️ THIS IS REQUIRED for InjectManifest:
+precacheAndRoute(self.__WB_MANIFEST);
 
-// App shell / pages: NetworkFirst
-workbox.routing.registerRoute(
-  ({ request }) => request.mode === "navigate",
-  new workbox.strategies.NetworkFirst({
-    cacheName: `${CACHE}-pages`,
-    plugins: [new workbox.expiration.ExpirationPlugin({ maxEntries: 50 })],
-  })
+// Optional: runtime caching for same-origin GETs
+registerRoute(
+  ({ request, url }) => request.method === 'GET' && url.origin === self.location.origin,
+  new StaleWhileRevalidate()
 );
 
-// Static assets (JS/CSS): StaleWhileRevalidate
-workbox.routing.registerRoute(
-  ({ request }) => ["style", "script", "worker"].includes(request.destination),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: `${CACHE}-static`,
-  })
-);
+cleanupOutdatedCaches();
 
-// Images: CacheFirst with expiration
-workbox.routing.registerRoute(
-  ({ request }) => request.destination === "image",
-  new workbox.strategies.CacheFirst({
-    cacheName: `${CACHE}-images`,
-    plugins: [
-      new workbox.expiration.ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-      }),
-    ],
-  })
-);
