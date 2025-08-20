@@ -1,32 +1,39 @@
-import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: "/",
-  build: {
-    sourcemap: true,
-    assetsDir: "code",
-    target: ["esnext"],
-    cssMinify: true,
-    lib: false
-  },
   plugins: [
+    react(),
     VitePWA({
-      strategies: "injectManifest",
+      strategies: 'injectManifest',
+      // This is your SW *source*
+      srcDir: 'src',
+      filename: 'sw.js',             // swSrc = src/sw.js
+      injectRegister: 'auto',         // or 'script'
+      // Optional: extra Workbox options for the injection step
       injectManifest: {
-        swSrc: 'public/sw.js',
-        swDest: 'dist/sw.js',
-        globDirectory: 'dist',
-        globPatterns: [
-          '**/*.{html,js,css,json,png}',
-        ],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // format 'es' matches your build logs
+        rollupFormat: 'es',
       },
-      injectRegister: false,
-      manifest: false,
-      devOptions: {
-        enabled: true
+      // Optional: manifest etc.
+      manifest: {
+        name: 'Mood Tracker',
+        short_name: 'MoodTracker',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#ffffff',
+        theme_color: '#ffffff',
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }
+        ]
       }
     })
-  ]
+  ],
+  // Ensure the Netlify "Publish directory" matches this outDir (default 'dist')
+  build: {
+    outDir: 'dist'
+  }
 })
