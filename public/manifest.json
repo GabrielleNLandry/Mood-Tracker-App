@@ -1,86 +1,46 @@
 {
-  "id": "/",
+  "name": "MoonMood – Mood Tracker & Journal",
+  "short_name": "MoonMood",
+  "description": "Track your daily mood, jot quick notes, and view simple insights. Offline and private by design.",
+  "id": "com.gabrielle.moonmood",
+  "start_url": "/?source=pwa",
   "scope": "/",
-  "name": "PWA Starter",
   "display": "standalone",
-  "start_url": "/",
-  "short_name": "starter",
-  "theme_color": "#E1477E",
-  "description": "This is a PWA Starter app",
-  "orientation": "any",
-  "background_color": "#E1477E",
-  "related_applications": [],
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "portrait",
+  "categories": ["health", "lifestyle", "productivity"],
   "prefer_related_applications": false,
-  "display_override": ["window-controls-overlay"],
-  "launch_handler": {
-    "client_mode": "focus-existing"
-  },
   "icons": [
-    {
-      "src": "assets/icons/512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/icons/192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/icons/48x48.png",
-      "sizes": "48x48",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/icons/24x24.png",
-      "sizes": "24x24",
-      "type": "image/png"
-    }
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [
     {
-      "src": "assets/screenshots/screen.png",
-      "sizes": "1617x1012",
-      "type": "image/png"
-    }
-  ],
-  "features": [
-    "Cross Platform",
-    "fast",
-    "simple"
-  ],
-  "categories": [
-    "social"
-  ],
-  "shortcuts": [
+      "src": "/screenshots/today.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Today: quick mood + note"
+    },
     {
-      "name": "Open About",
-      "short_name": "About",
-      "description": "Open the about page",
-      "url": "/about",
-      "icons": [{ "src": "assets/icons/192x192.png", "sizes": "192x192" }]
+      "src": "/screenshots/journal.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Journal & search"
+    },
+    {
+      "src": "/screenshots/insights.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Insights: last 7 days & streak"
     }
   ],
-  "widgets": [
-    {
-      "name": "Starter Widget",
-      "tag": "starterWidget",
-      "ms_ac_template": "widget/ac.json",
-      "data": "widget/data.json",
-      "description": "A simple widget example from pwa-starter.",
-      "screenshots": [
-        {
-          "src": "assets/screenshots/widget-screen.png",
-          "sizes": "500x500",
-          "label": "Widget screenshot"
-        }
-      ],
-      "icons": [
-        {
-          "src": "assets/icons/48x48.png",
-          "sizes": "48x48"
-        }
-      ]
-    }
-  ]
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }

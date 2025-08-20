@@ -1,62 +1,170 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>MoonMood</title>
 
-<head>
-  <meta charset="utf-8" />
-  <title>PWA Starter</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Track your daily mood and notes. Offline and installable PWA." />
+    <meta name="theme-color" content="#0f172a" />
 
-  <base href="/" />
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
-  <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
-  <meta name="viewport"
-    content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <meta name="description" content="This is a PWA Starter app" />
+    
+    <style>
+  /* ===== Cozy Theme Variables ===== */
+  :root{
+    /* warm paper + cocoa ink + terracotta accent */
+    --bg: #fdf8f6;          /* cream */
+    --card: #fffaf7;        /* soft paper */
+    --ink: #3a2f2a;         /* coffee text */
+    --muted: #6b5f58;       /* warm gray */
+    --primary: #b45309;     /* amber/terracotta */
+    --border: #efe3db;      /* parchment line */
+    --ring: rgba(180,83,9,.28);
+    --shadow: 0 8px 20px rgba(60, 34, 21, .07);
+  }
 
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f3f3" />
+  *{ box-sizing:border-box }
+  html,body{ height:100% }
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    /* cozy layered background: paper + soft blobs */
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(244, 180, 124, .12), transparent 55%),
+      radial-gradient(900px 500px at 10% 0%, rgba(209, 170, 150, .14), transparent 50%),
+      linear-gradient(#fdf8f6, #fff);
+  }
+  h1,h2,strong{ font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif }
 
-  <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="PWA Starter" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  .container{ max-width: 780px; margin:0 auto; padding:16px 16px 110px }
 
-  <!-- This tag is used by the PWA Starter CLI to identify template projects. Don't remove if you are using the CLI. -->
-  <meta name="pwa-starter-template-identity" content="pwa-starter"/>
+  /* ===== App Bar ===== */
+  header.appbar{
+    position:sticky; top:0; z-index:10;
+    display:flex; align-items:center; justify-content:space-between;
+    background: rgba(255,250,247,.78);
+    backdrop-filter: blur(8px);
+    border:1px solid var(--border);
+    border-radius: 18px;
+    padding: 12px 16px;
+    margin: 12px 0 18px;
+    box-shadow: var(--shadow);
+  }
+  header.appbar .title{
+    display:flex; align-items:center; gap:10px;
+  }
+  header.appbar .title .logo{
+    width:32px; height:32px; border-radius:12px;
+    background: radial-gradient(circle at 30% 35%, #ffe2c6 0 55%, #ffd2a3 56% 100%);
+    display:grid; place-items:center;
+    box-shadow: inset 0 0 0 1px #f3d6c6, 0 2px 6px rgba(0,0,0,.06);
+    font-size:18px;
+  }
+  .badge{
+    padding:5px 10px; border-radius: 999px;
+    background: #fde68a; color:#7c2d12; border: 1px solid #f5d565;
+    font-size:12px; font-weight:700;
+    box-shadow: 0 1px 0 rgba(124,45,18,.12);
+  }
 
-  <!-- Imports an icon to represent the document. -->
-  <link rel="icon" href="/assets/icons/icon_24.png" type="image/png" />
+  /* ===== Tabs (soft segmented control) ===== */
+  .tabs{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px }
+  .tab-btn{
+    border:1px solid var(--border); background: #fff6ef;
+    border-radius: 14px; padding: 12px;
+    cursor:pointer; font-weight:700; color:#7a4b2c;
+    box-shadow: 0 1px 0 rgba(122,75,44,.06);
+    transition: transform .05s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .tab-btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow) }
+  .tab-btn[aria-selected="true"]{
+    background: linear-gradient(180deg, #ffe9d3, #ffe1c2);
+    border-color:#f3c8a4; color:#5b341c;
+    box-shadow: 0 0 0 3px var(--ring), var(--shadow);
+  }
 
-  <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
-  <link rel="manifest" href="manifest.json" />
+  /* ===== Cards ===== */
+  .card{
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px 16px 14px;
+    box-shadow: var(--shadow);
+  }
 
-  <!-- light mode and dark mode CSS -->
-  <link rel="stylesheet" media="(prefers-color-scheme:light)"
-    href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/dist/themes/light.css">
-  <link rel="stylesheet" media="(prefers-color-scheme:dark)"
-    href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/dist/themes/dark.css"
-    onload="document.documentElement.classList.add('sl-theme-dark');">
+  /* ===== Form controls ===== */
+  .row{ display:grid; gap:8px }
+  label{ font-size:14px; font-weight:700; color:#5a463c }
+  input[type="text"], input[type="date"], textarea, select{
+    width:100%; padding: 12px 14px; font:inherit; color:var(--ink);
+    border:1px solid var(--border); border-radius: 14px; background:#fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+  }
+  input:focus, textarea:focus, select:focus{
+    outline:none; border-color:#f3c8a4; box-shadow: 0 0 0 3px var(--ring);
+  }
+  textarea{ resize:vertical; min-height: 110px }
 
-  <script type="module">
-    import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-    setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/');
-  </script>
+  /* ===== Buttons ===== */
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    border-radius: 14px; padding: 10px 14px; border:1px solid var(--border);
+    background: linear-gradient(180deg, #fff, #fff7ef);
+    cursor:pointer; font-weight:700; color:#6a4a34;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04);
+  }
+  .btn.primary{
+    background: linear-gradient(180deg, #f8c58f, #eba061);
+    border-color:#e59b5c; color:#3b2416;
+    box-shadow: 0 2px 0 rgba(180,83,9,.25), var(--shadow);
+  }
+  .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow) }
+  .btn.icon{ padding: 8px 10px; border-radius: 12px }
 
-  <script type="module" src="/src/app-index.ts"></script>
-</head>
+  .muted{ color:var(--muted) }
+  .grid{ display:grid; gap:10px }
 
-<body>
-  <!-- Our app-index web component. This component is defined in src/pages/app-index.ts-->
-  <app-index></app-index>
+  /* ===== Mood Pills ===== */
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 9px 12px; border-radius: 999px;
+    border:1px solid #f3d6c6; background: #fff5ee; color:#5b341c;
+    cursor:pointer; font-weight:700;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03);
+  }
+  .pill[aria-pressed="true"]{
+    border-color:#eaa769;
+    background: linear-gradient(180deg, #ffe7cf, #ffdfbf);
+    box-shadow: 0 0 0 3px var(--ring);
+  }
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.onload = () => {
-        navigator.serviceWorker.register(
-          '/sw.js'
-        );
-      }
-    }
-  </script>
-</body>
+  /* ===== Tags ===== */
+  .tag{
+    border:1px solid #f0d8c8; background:#fffaf5;
+    padding: 4px 10px; border-radius: 999px; font-size:12px; color:#6b442b;
+  }
 
+  /* ===== Install strip ===== */
+  footer.install{
+    position:fixed; left:0; right:0; bottom:16px;
+    margin:0 auto; max-width:780px; padding: 10px 16px;
+  }
+  .install-inner{
+    text-align:center; border:1px solid var(--border); background:#fffaf7;
+    border-radius: 14px; font-size:12px; color:var(--muted); box-shadow: var(--shadow);
+  }
+</style>
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/main.jsx"></script>
+  </body>
 </html>
