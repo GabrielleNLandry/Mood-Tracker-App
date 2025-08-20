@@ -39,7 +39,7 @@ const saveSettings = (s) => localStorage.setItem(SETTINGS, JSON.stringify(s));
  */
 const initialState = {
   entries: loadEntries(),
-  settings: { enableHints: true, startWeekOnMonday: false, ...loadSettings() },
+  settings: { enableHints: true, startWeekOnMonday: false, theme: "system", ...loadSettings() },
 };
 
 function reducer(state, action) {
@@ -331,7 +331,45 @@ function SettingsPane({ settings, onChange, onExport, onImport }) {
             />
             Start week on Monday
           </label>
+
+              <div style={{ display: "grid", gap: 6, marginTop: 6 }}>
+      <label style={{ fontWeight: 700, color: "#5a463c" }}>Theme</label>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <input
+            type="radio"
+            name="theme"
+            value="system"
+            checked={(settings.theme || "system") === "system"}
+            onChange={() => onChange({ theme: "system" })}
+          />
+          System
+        </label>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <input
+            type="radio"
+            name="theme"
+            value="light"
+            checked={settings.theme === "light"}
+            onChange={() => onChange({ theme: "light" })}
+          />
+          Light
+        </label>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <input
+            type="radio"
+            name="theme"
+            value="dark"
+            checked={settings.theme === "dark"}
+            onChange={() => onChange({ theme: "dark" })}
+          />
+          Dark
+        </label>
+      </div>
+    </div>
+
         </div>
+        
       </div>
 
       <div className="card">
@@ -353,12 +391,29 @@ function SettingsPane({ settings, onChange, onExport, onImport }) {
  *  App (tabs + pages)
  *  -------------------------
  */
+function applyTheme(theme) {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDark = theme === "dark" || (theme === "system" && prefersDark);
+  document.documentElement.classList.toggle("dark", isDark);
+}
+
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [tab, setTab] = useState("today");
   const [editing, setEditing] = useState(null);
 
   const todayExisting = useMemo(() => state.entries.find((e) => e.date === todayISO()), [state.entries]);
+
+  useEffect(() => {
+    applyTheme(state.settings.theme || "system");
+
+    // update if OS theme changes (when in "system" mode)
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => applyTheme(state.settings.theme || "system");
+    mq.addEventListener?.("change", handler);
+    return () => mq.removeEventListener?.("change", handler);
+  }, [state.settings.theme]);
+
 
   function handleExport() {
     const blob = new Blob([JSON.stringify(state.entries, null, 2)], { type: "application/json" });
