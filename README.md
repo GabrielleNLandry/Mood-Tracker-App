@@ -115,7 +115,6 @@ https://moon-mood.netlify.app/icons/icon-512.png
 Both should render PNGs (not HTML).
 
 **📦 Deployment Steps Documentation**
-Describe how you registered, built, and submitted the app
 
 1) Registration
 * Service Worker Registration: Configured vite-plugin-pwa with registerType: 'autoUpdate' and injectRegister: 'auto' so the service worker registers automatically in production.
