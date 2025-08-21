@@ -1,19 +1,19 @@
-// src/sw.js
-import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
-import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+// This is the "Offline copy of pages" service worker
 
-self.skipWaiting();
-self.clientsClaim();
+const CACHE = "pwabuilder-offline";
 
-// ⬇️ THIS IS REQUIRED for InjectManifest:
-precacheAndRoute(self.__WB_MANIFEST);
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
-// Optional: runtime caching for same-origin GETs
-registerRoute(
-  ({ request, url }) => request.method === 'GET' && url.origin === self.location.origin,
-  new StaleWhileRevalidate()
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+workbox.routing.registerRoute(
+  new RegExp('/*'),
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: CACHE
+  })
 );
-
-cleanupOutdatedCaches();
 
