@@ -23,7 +23,7 @@ React + Vite
 vite-plugin-pwa (Workbox under the hood)
 
 Deployed on Netlify
-
+```
 
 Project Structure (basic)
 /pwa-starter
@@ -39,7 +39,7 @@ Project Structure (basic)
 ├─ index.html
 ├─ vite.config.mjs
 └─ netlify.toml     # if deploying with Netlify
-
+```
 Documentation (how to use & how it works)
 Using the app
 
