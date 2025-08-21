@@ -1,35 +1,60 @@
-# PWA Starter
+🌙 MoonMood – Mood Tracker & Journal (PWA)
 
-[**Straight to Full Documentation**](https://docs.pwabuilder.com/#/starter/quick-start)
+MoonMood is a simple, privacy-friendly Progressive Web App for recording your mood, adding quick notes, and viewing lightweight insights. It installs to your home screen/desktop and works offline. Data is stored locally on the device (no accounts, no servers).
 
-The PWABuilder pwa-starter is our opinionated, best practices, production tested starter that we use to build all of our PWAs, including [PWABuilder itself](https://blog.pwabuilder.com/posts/introducing-the-brand-new-pwa-builder/)! The pwa-starter is a starter codebase, just like create-react-app or the Angular CLI can generate, that uses the PWABuilder team&#39;s preferred front-end tech stack. We also have a CLI tool to allow you to create a PWA template from the command line.
+Features
 
-## Jump Right In
+Quick mood entry with optional note
 
-Install the PWABuilder CLI:
+Journal history with basic search
 
-`npm i -g @pwabuilder/cli`
+7-day insights & simple streaks
 
-And create a new app with this command:
+Installable PWA (A2HS)
 
-`pwa create`
+Offline support after first load
 
-And start your app locally with:
+Cozy dark theme
 
-`pwa start`
+Tech Stack
 
-And that's it! Good luck on your Progressive Web App adventure!
+React + Vite
 
-## More Info
+vite-plugin-pwa (Workbox under the hood)
 
-[![Get started with the pwa-starter!](https://img.youtube.com/vi/u3pWKpmic_k/0.jpg)](https://www.youtube.com/watch?v=u3pWKpmic_k)
+Deployed on Netlify
 
-With it you get an app that:
-- Has no build system to set up and no boilerplate code to add. Everything is included out of the box.
-- Has a Service Worker system using [Workbox](https://developers.google.com/web/tools/workbox/)
-- Scores close to 100 on Lighthouse out of the box
-- Has everything needed to be installable in the browser
-- Is ready to be package for the app stores using [PWABuilder](https://www.pwabuilder.com)
-- Uses the [Azure Static Web Apps CLI](https://azure.github.io/static-web-apps-cli) which enables emulating your production environment locally, and gets you ready for deploying to Azure Static Web Apps!
 
-and all with just a few button clicks 😊.
+Project Structure (basic)
+/pwa-starter
+├─ public/
+│  ├─ manifest.json
+│  └─ icons/
+│     ├─ icon-192.png
+│     └─ icon-512.png
+├─ src/
+│  ├─ main.(tsx|jsx)
+│  ├─ App.(tsx|jsx)
+│  └─ components/   # Mood form, Journal list, Insights, etc.
+├─ index.html
+├─ vite.config.mjs
+└─ netlify.toml     # if deploying with Netlify
+
+Documentation (how to use & how it works)
+Using the app
+
+Open the app and choose today’s mood (e.g., 😄 🙂 😐 🙁 😫).
+
+Optionally add a short note.
+
+Review entries in Journal (search/filter basics).
+
+See Insights for the last 7 days and your current streak.
+
+How it works (high level)
+
+State & storage: entries (date, mood, note) are saved locally (e.g., localStorage/IndexedDB) so your data stays on the device and remains available offline.
+
+PWA: the service worker precaches the build output so the app loads without a network after the first visit.
+
+UI: small, focused components: Mood input, Journal list, and Insights view.
